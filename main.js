@@ -69,3 +69,21 @@ setTimeout(function(){ $('.dimension2').addClass('show') }, 2000);
 setTimeout(function(){ $('.dimension3').addClass('show') }, 3000);
 setTimeout(function(){ $('.dimension4').addClass('show') }, 4000);
 setTimeout(function(){ $('.dimension5').addClass('show') }, 5000);
+
+
+$(function __intit__(){
+	var fragment = document.createDocumentFragment();
+	for(var i = 0; i< 12; i++){
+		var row = document.createElement("div");
+		row.className = 'row';
+		for(var j = 0; j< 12; j++){
+			var cell = document.createElement('div');
+			cell.className = "minesweeper_cell";
+			row.appendChild(cell);
+		}
+		fragment.appendChild(row);
+	}
+	// console.log(document.querySelector('.stage'))
+	document.querySelector('.stage').appendChild(fragment);
+});
+
