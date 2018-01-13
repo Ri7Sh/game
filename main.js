@@ -79,6 +79,7 @@ $(function __intit__(){
 		for(var j = 0; j< 12; j++){
 			var cell = document.createElement('div');
 			cell.className = "minesweeper_cell";
+
 			row.appendChild(cell);
 			cells.push(cell);
 		}
@@ -86,7 +87,12 @@ $(function __intit__(){
 	}
 	// console.log(document.querySelector('.stage'))
 	document.querySelector('.stage').appendChild(fragment);
+	
 	randBomb();
+	setTimeout(()=>{
+		displayNumber(cells[20], 1)
+	}, 1000);
+	
 });
 
 
@@ -95,12 +101,15 @@ function randBomb(){
 	while(cells[index].data == "b"){
 		index = Math.floor(cells.length * Math.random());
 	}
+	// exploded(cells[index])
 	explodeAnimate(cells[index]);
 }	
 
+
+
 function explodeAnimate(ele){
 	ele.className += " bomb";
-	ele.data = "b";
+	ele.setAttribute("data","b");
 	var bomb_cells = [];
 	var fragment = document.createDocumentFragment();
 	for(var i = 0; i< 20; i++){
@@ -132,8 +141,17 @@ function chooseEle(bomb_cells, ele){
 }
 
 function exploded(ele){
+	ele.setAttribute("data","b");
 	ele.className += " exploded";
 
+}
+
+function displayNumber(ele, number){
+	ele.setAttribute("data",number.toString());
+	ele.className += " number";
+	var p = document.createElement('p');
+	p.innerText = number;
+	ele.appendChild(p);
 }
 
 
