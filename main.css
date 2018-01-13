@@ -232,7 +232,8 @@ BELOW 1000
 .minesweeper_cell, .bomb-row *{
 	flex: 1;
 	
-	background: #3f824e91;
+	background: #3f824e2b;
+	/*filter: blur(1px);*/
 	cursor: url('target.ico'), pointer;
 	
 }
