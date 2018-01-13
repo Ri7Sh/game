@@ -70,7 +70,7 @@ setTimeout(function(){ $('.dimension3').addClass('show') }, 3000);
 setTimeout(function(){ $('.dimension4').addClass('show') }, 4000);
 setTimeout(function(){ $('.dimension5').addClass('show') }, 5000);
 
-
+var cells = [];
 $(function __intit__(){
 	var fragment = document.createDocumentFragment();
 	for(var i = 0; i< 12; i++){
@@ -80,10 +80,61 @@ $(function __intit__(){
 			var cell = document.createElement('div');
 			cell.className = "minesweeper_cell";
 			row.appendChild(cell);
+			cells.push(cell);
 		}
 		fragment.appendChild(row);
 	}
 	// console.log(document.querySelector('.stage'))
 	document.querySelector('.stage').appendChild(fragment);
+	randBomb();
 });
+
+
+function randBomb(){
+	var index = Math.floor(cells.length * Math.random());
+	while(cells[index].data == "b"){
+		index = Math.floor(cells.length * Math.random());
+	}
+	explodeAnimate(cells[index]);
+}	
+
+function explodeAnimate(ele){
+	ele.className += " bomb";
+	ele.data = "b";
+	var bomb_cells = [];
+	var fragment = document.createDocumentFragment();
+	for(var i = 0; i< 20; i++){
+		var row = document.createElement("div");
+		row.className = 'bomb-row';
+		for(var j = 0; j< 20; j++){
+			var cell = document.createElement('div');
+			row.appendChild(cell);
+			bomb_cells.push(cell);
+		}
+		fragment.appendChild(row);
+	}
+	// console.log(document.querySelector('.stage'))
+	ele.appendChild(fragment);
+	chooseEle(bomb_cells, ele)
+}
+
+function chooseEle(bomb_cells, ele){
+	if(bomb_cells.length == 0){
+		// setTimeout(randBomb, 300);
+		return;
+	}
+	var index = Math.floor(bomb_cells.length * Math.random());
+	bomb_cells[index].className += "bomb-cell";
+	bomb_cells.splice(index, 1);
+	setTimeout(function(){
+		chooseEle(bomb_cells, ele)
+	}, 10)
+}
+
+function exploded(ele){
+	ele.className += " exploded";
+
+}
+
+
 

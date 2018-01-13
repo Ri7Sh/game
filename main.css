@@ -212,7 +212,7 @@ BELOW 1000
 }
 
 
-.stage{
+.stage, .bomb{
 	display: flex;
 	-webkit-flex-direction: column;
 	    -ms-flex-direction: column;
@@ -220,7 +220,7 @@ BELOW 1000
 	flex-wrap: wrap;
 }
 
-.row{
+.row, .bomb-row{
 	flex: 1;
 		display: flex;
 	-webkit-flex-direction: row;
@@ -229,8 +229,20 @@ BELOW 1000
 	flex-wrap: wrap;	
 	/*border: 1px solid #fff;*/
 }
-.row *{
+.minesweeper_cell, .bomb-row *{
 	flex: 1;
-	border: 1px solid #00ff3999;	
+	
+	background: #3f824e91;
+	cursor: pointer;
+}
+.minesweeper_cell{
+	border: 1px solid #000;	
+}
+.bomb-cell{
+	background: #ff000087;
+}
+
+.exploded{
+	background: #ff000087;
 }
 
