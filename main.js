@@ -70,24 +70,37 @@ setTimeout(function(){ $('.dimension3').addClass('show') }, 3000);
 setTimeout(function(){ $('.dimension4').addClass('show') }, 4000);
 setTimeout(function(){ $('.dimension5').addClass('show') }, 5000);
 
+var bombList = [];
 var cells = [];
 $(function __intit__(){
+	
 	var fragment = document.createDocumentFragment();
+	var grid = make2DArray(12, 12);
+	// take str value from rigvita
+				var str='0bbbbb6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+				var p,q;
+    			for(p=0;p<12;p++)
+    			for(q=0;q<12;q++){
+    			grid[q][p]= str.substr(p*12+q, 1);
+    		}
 	for(var i = 0; i< 12; i++){
 		var row = document.createElement("div");
 		row.className = 'row';
 		for(var j = 0; j< 12; j++){
 			var cell = document.createElement('div');
 			cell.className = "minesweeper_cell";
-
 			row.appendChild(cell);
+			
+			cell.setAttribute('i',i);
+			cell.setAttribute('j',j);
 			cells.push(cell);
-		}
+			cell.onclick= function(){
+			displayMinesweeper(grid,cells)} ;
+			}
 		fragment.appendChild(row);
 	}
 	// console.log(document.querySelector('.stage'))
 	document.querySelector('.stage').appendChild(fragment);
-	
 	randBomb();
 	setTimeout(()=>{
 		displayNumber(cells[20], 1)
@@ -95,6 +108,39 @@ $(function __intit__(){
 	
 });
 
+function displayMinesweeper(grid,cell){
+	var p,q;
+	for(p=0;p<12;p++)
+    for(q=0;q<12;q++) {
+        if(grid[p][q]==1||grid[p][q]==2||grid[p][q]==3||grid[p][q]==4||grid[p][q]==5||grid[p][q]==6){
+  		displayNumber(cell[p*12+q],grid[p][q]);
+        }
+        else if (grid[p][q]=='b'){
+        	var flag=0;
+        	var bNo=bombList.length;
+            for (var l=0;l<bNo;l++) {
+            	if (bombList[l]==p*12+q)
+            	flag=1;
+            }
+            if(flag==0){		
+            explodeAnimate(cell[p*12+q]);
+            bombList.push(p*12+q);
+            }
+
+    	}
+    	console.log(bombList);
+    }
+}
+
+
+function make2DArray(cols, rows) {
+	// get string 
+  var arr = new Array(cols);
+  for (var i = 0; i < rows; i++) {
+    arr[i] = new Array(rows);
+  }
+  return arr;
+}
 
 function randBomb(){
 	var index = Math.floor(cells.length * Math.random());
@@ -147,6 +193,7 @@ function exploded(ele){
 }
 
 function displayNumber(ele, number){
+	ele.innerHTML='';
 	ele.setAttribute("data",number.toString());
 	ele.className += " number";
 	var p = document.createElement('p');
