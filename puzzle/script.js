@@ -14,7 +14,7 @@ CONSTANTS
 
 ================
 ***************/
-var PIECE_WIDTH = 70, PIECE_HEIGHT = 70, ROWS = 3, COLS = 3;
+var PIECE_WIDTH = 70, PIECE_HEIGHT = 70, ROWS = 4, COLS = 3, RADIUS = 250;
 
 
 /***************
@@ -62,7 +62,16 @@ Game.prototype.start = function(){
 	this.dragDiv = this.dragDiv.bind(this);
 
 	pieceList.forEach(p => {
+		var i = p.ele.getAttribute('data_pos');
+		if(i != "n"){
+			this.grid.addPiece(p, this.grid.cells[parseInt(i, 16)])
+		}
 		this.setPieceEventListeners(p);
+	})
+
+	this.grid.cells.forEach((cell, index)=>{
+		console.log(text[index]);
+		cell.cell.innerText = text[index];
 	})
 }
 
@@ -277,14 +286,23 @@ function Grid(table, cells, config={rows:3, cols:3}){
 
 Grid.prototype.addPiece = function(piece, cell){
 	this.log(piece, cell, this);
-	piece.setCell(cell);
-	cell.setPiece(piece);
+	if(cell.isFree()){
+		console.log("is Free ->", cell.isFree())
+		piece.setCell(cell);
+		cell.setPiece(piece);
+	}else{
+		piece.setBack();
+	}
 }
 
 Grid.prototype.hightlightGridBlock = function(eleRect){
+
 	if(this.isInsideTable(eleRect)){
 		var cell = this.findClosestBlock(eleRect);
-		cell.highlight();
+		if(cell)
+		{
+			cell.highlight();
+		}
 	}else{
 		var old = document.querySelector('.highlighted');
 		if(old){
@@ -301,43 +319,44 @@ Grid.prototype.snapToGrid = function(piece){
 }
 
 Grid.prototype.findClosestBlock = function(eleRect){
-	var xLines = new Array(this.config.rows - 1).fill(0).map((ele, index)=>{
-		return this.cells[index].rect().right;
-	});
-	var yLines = new Array(this.config.cols - 1).fill(0).map((ele, index)=>{
-		return this.cells[this.config.rows*index].rect().bottom;
-	});
-
-	var colPos = findPosToInsert(this.getCenterX(eleRect), xLines);
-	var rowPos = findPosToInsert(this.getCenterY(eleRect), yLines);				
-	
-	return this.cells[rowPos*this.config.rows + colPos];
-
-	function findPosToInsert(ele, arr){ //sorted array 
-		for(i in arr){
-			if(arr[i] >= ele){
-				return parseInt(i); 
-			}
+	var xCenter = this.getCenterX(eleRect);
+	var yCenter = this.getCenterY(eleRect);
+	var cell = null;
+	var flag = false;
+	this.cells.forEach((ele)=>{
+		if(flag)return;
+		var X = this.getCenterX(ele.rect());
+		var Y = this.getCenterY(ele.rect());
+		var distance = Math.sqrt(Math.pow((xCenter - X), 2) + Math.pow((yCenter - Y), 2));
+		if(distance < 1.25*PIECE_WIDTH){
+			cell = ele;
+			flag = true;
 		}
-		return arr.length;
-	}
-
+	})
+	return cell;
 }
 
 
 Grid.prototype.isInsideTable = function(eleRect){
 	
-	var rightBoundary = (this.getCenterX(eleRect) < this.tableRect.right);
-	var leftBoundary = (this.getCenterX(eleRect) > this.tableRect.left);
-	var bottomBoundary = (this.getCenterY(eleRect) < this.tableRect.bottom);
-	var topBoundary = (this.getCenterY(eleRect) > this.tableRect.top);
+	// var rightBoundary = (this.getCenterX(eleRect) < this.tableRect.right);
+	// var leftBoundary = (this.getCenterX(eleRect) > this.tableRect.left);
+	// var bottomBoundary = (this.getCenterY(eleRect) < this.tableRect.bottom);
+	// var topBoundary = (this.getCenterY(eleRect) > this.tableRect.top);
 	
-	return (
-		rightBoundary &&
-		leftBoundary && 
-		bottomBoundary &&
-		topBoundary
-	)
+	// return (
+	// 	rightBoundary &&
+	// 	leftBoundary && 
+	// 	bottomBoundary &&
+	// 	topBoundary
+	// )
+
+	var xCenter = this.getCenterX(eleRect);
+	var yCenter = this.getCenterY(eleRect);
+	var X = this.getCenterX(this.tableRect);
+	var Y = this.getCenterY(this.tableRect);
+	var distance = Math.sqrt(Math.pow((xCenter - X), 2) + Math.pow((yCenter - Y), 2));
+	return ( distance <= RADIUS + PIECE_WIDTH  && distance >= RADIUS - PIECE_WIDTH)
 }
 
 Grid.prototype.getCenterX = function(rect){
@@ -384,7 +403,9 @@ Cell.prototype.rect = function(){
 }
 
 Cell.prototype.setPiece = function(piece){
+	console.log('setPiece', piece)
 	this.piece = piece;
+	console.log(this, this.isFree())
 }
 
 Cell.prototype.getPieceIndex = function(){
@@ -393,6 +414,11 @@ Cell.prototype.getPieceIndex = function(){
 	}
 	return null;
 }
+
+Cell.prototype.isFree = function(){
+	return this.piece == null;
+}
+
 
 Cell.prototype.removePiece = function(piece){
 	this.piece = null;
@@ -454,8 +480,9 @@ create scene
 
 
 
-
-var pieces = ['./img/pieces/superman/image_part_005.jpg', './img/pieces/superman/image_part_009.jpg', './img/pieces/superman/image_part_001.jpg', './img/pieces/superman/image_part_007.jpg', './img/pieces/superman/image_part_002.jpg', './img/pieces/superman/image_part_004.jpg', './img/pieces/superman/image_part_008.jpg', './img/pieces/superman/image_part_003.jpg', './img/pieces/superman/image_part_006.jpg']
+var state = "nnnnnnnnnnnn";
+var text = ["fire", "air", "water","fire", "air", "water","fire", "air", "water","fire", "air", "water"]
+// var pieces = ['./img/pieces/superman/image_part_005.jpg','./img/pieces/superman/image_part_005.jpg', './img/pieces/superman/image_part_009.jpg', './img/pieces/superman/image_part_001.jpg', './img/pieces/superman/image_part_007.jpg', './img/pieces/superman/image_part_002.jpg', './img/pieces/superman/image_part_004.jpg', './img/pieces/superman/image_part_008.jpg', './img/pieces/superman/image_part_003.jpg', './img/pieces/superman/image_part_006.jpg','./img/pieces/superman/image_part_006.jpg' ]
 
 var board = document.getElementById('board');
 var container  = document.createElement('div');
@@ -464,14 +491,29 @@ board.appendChild(container);
 
 var scene = document.createDocumentFragment();
 
-var tableEle = document.createElement('table');
+var tableEle = document.createElement('div');
 tableEle.className = 'grid';
 for(var i = 0; i< ROWS; i++){
-	var tr = document.createElement('tr');
+	// var tr = document.createElement('div');
 	for(var k = 0; k< COLS; k++){
-		tr.appendChild(document.createElement('td'));
+		var cell = document.createElement('div');
+		cell.className = "cell";
+		// postion peices on a circle
+		var theta = (i*Math.PI/2 + (k-1)*Math.PI/6);
+		var x = RADIUS*Math.sin(theta);
+		var y = - RADIUS*Math.cos(theta);
+		// console.log(theta/Math.PI)
+		cell.style.transform = "translateX(" + x + "px) translateY(" + y +"px)";
+		// tr.appendChild(cell);
+		tableEle.appendChild(cell);
 	}
-	tableEle.appendChild(tr);
+	
+}
+
+for(var i = 1; i <= 2; i++){
+	var a = document.createElement('div');
+	a.className = "ring ring_" + i;
+	tableEle.appendChild(a);
 }
 
 board.insertBefore(tableEle, board.firstChild);
@@ -479,20 +521,27 @@ board.insertBefore(tableEle, board.firstChild);
 
 //For all practical purposes .......
 
-pieces.forEach((src, index)=>{
-	var img = document.createElement('img');
-	img.className = 'piece';
-	img.src = src;
+// pieces.forEach((src, index)=>{
+	var peiceNo = 0;
+	state.split("").forEach((el,index)=>{
+		if(el == "h")return;
+
+		var img = document.createElement('img');
+
+		img.className = 'piece';
+		img.src = './img/pieces/mama/' + (index + 1) + '.png';
 	// img.setAttribute("data-index", index);
 	img.position = "absolute";
-	var pos = services.getPieceDefaultPosition(document.getElementById('board'), index)
+	var pos = services.getPieceDefaultPosition(document.getElementById('board'), peiceNo)
 	img.style.top = pos[1] + "px";
 	img.style.left = pos[0] + "px";
 	img.style.width = PIECE_WIDTH + "px";
 	img.style.height = PIECE_HEIGHT +  "px";
-
+	img.setAttribute("data_pos", el);
+	peiceNo++;
 	scene.appendChild(img);
 })
+
 
 
 
@@ -532,7 +581,7 @@ my game config
 ***************/
 
 var table = document.querySelector('.grid');
-var cells = document.querySelector('.grid').querySelectorAll('td');
+var cells = document.querySelector('.grid').querySelectorAll('.cell');
 var pieces = document.querySelectorAll('.piece');
 
 var grid = new Grid(table, cells, {
@@ -540,7 +589,7 @@ var grid = new Grid(table, cells, {
 	cols: COLS
 });
 var pieceList = Array.prototype.map.call(pieces , (ele, i) => new Piece(ele, i));
-var game = new Game(grid, pieceList);
+var game = new Game(grid, pieceList, true);
 
 
 /***************
@@ -553,19 +602,35 @@ Start ^_^ (yay!)
 game.start();
 
 
-document.querySelector('button').addEventListener('click', ()=>{
- 	var boardSequence = game.getSequence();
- 	console.log(boardSequence);
- 	// if(result.status){
- 	// 	table.className += " won";
- 	// 	document.querySelector('#output').innerText = "You Win!";
- 	// }else{
- 	// 	result.cells.forEach((ele)=>{
- 	// 		this.grid.cells[ele].setRed();		
- 	// 	})
- 	// }
+Array.prototype.forEach.call(document.querySelectorAll('button'), function(el){
+	el.addEventListener('click', (e)=>{
+		var v = document.querySelector('.ring_1');
+		v.className += " glow";
+		setTimeout(()=>{
+			v.className = v.className.replace('glow', '');
+		}, 2000)
+		var boardSequence = game.getSequence();
+		var string = encodeSequence(boardSequence);
+		// $.post({
+		// 	"data": string
+		// }, '/main/' + e.target.getAttribute("data-url"), function(data){
+		// 	console.log(data)
+		// })
+	})
+});
 
-})
+function encodeSequence(seq){
+	var str = "";
+	seq.forEach((el, i)=>{
+		if(el == null){
+			str += "n";
+		}else{
+			str += el.toString(16);
+		}
+	})
+	console.log(str);
+	return str;
+}
 
 // dummy implementation
 // Game.prototype.checkSequence = function(){
@@ -581,10 +646,10 @@ document.querySelector('button').addEventListener('click', ()=>{
 // 			if(!result.cells){
 // 				result.cells = [index];
 // 			}
-			
+
 // 			result.cells.push(index);
 // 		}
 // 	})
 // 	return result;
 // }
- 
+
