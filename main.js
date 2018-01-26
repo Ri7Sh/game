@@ -74,15 +74,7 @@ var bombList = [];
 var cells = [];
 $(function __intit__(){
 	
-	var fragment = document.createDocumentFragment();
-	var grid = make2DArray(12, 12);
-	// take str value from rigvita
-				var str='0bbbbb6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-				var p,q;
-    			for(p=0;p<12;p++)
-    			for(q=0;q<12;q++){
-    			grid[q][p]= str.substr(p*12+q, 1);
-    		}
+	var fragment = document.createDocumentFragment();		
 	for(var i = 0; i< 12; i++){
 		var row = document.createElement("div");
 		row.className = 'row';
@@ -93,53 +85,81 @@ $(function __intit__(){
 			
 			cell.setAttribute('i',i);
 			cell.setAttribute('j',j);
+			cell.addEventListener("click", function(e){
+				var obj  = {};
+				obj.cords = [e.target.getAttribute("i"), e.target.getAttribute("j")]
+				console.log(obj)
+				$.ajax({
+					"method": "GET",
+					"data" : JSON.stringify(obj),
+					"url": '/main/reveal/',
+					success: console.log
+				})
+				// displayMinesweeper(grid,cells)
+			});
 			cells.push(cell);
-			cell.onclick= function(){
-			displayMinesweeper(grid,cells)} ;
-			}
+
+		}
 		fragment.appendChild(row);
 	}
 	// console.log(document.querySelector('.stage'))
 	document.querySelector('.stage').appendChild(fragment);
-	randBomb();
-	setTimeout(()=>{
-		displayNumber(cells[20], 1)
-	}, 1000);
+	// randBomb();
+	
+	displayMinesweeper(createGrid(window.str), getCells());
+	
 	
 });
+
+function getCells(){
+	return cells;
+}
+
+function createGrid(str, old_str=""){
+
+	var p,q;
+	var grid = make2DArray(12, 12);
+	for(p=0;p<12;p++){
+		for(q=0;q<12;q++){
+			grid[q][p]= str.substr(p*12+q, 1);
+		}
+	}
+	return grid   			
+}
 
 function displayMinesweeper(grid,cell){
 	var p,q;
 	for(p=0;p<12;p++)
-    for(q=0;q<12;q++) {
-        if(grid[p][q]==1||grid[p][q]==2||grid[p][q]==3||grid[p][q]==4||grid[p][q]==5||grid[p][q]==6){
-  		displayNumber(cell[p*12+q],grid[p][q]);
-        }
-        else if (grid[p][q]=='b'){
-        	var flag=0;
-        	var bNo=bombList.length;
-            for (var l=0;l<bNo;l++) {
-            	if (bombList[l]==p*12+q)
-            	flag=1;
-            }
-            if(flag==0){		
-            explodeAnimate(cell[p*12+q]);
-            bombList.push(p*12+q);
-            }
+		for(q=0;q<12;q++) {
+			if(grid[p][q]==1||grid[p][q]==2||grid[p][q]==3||grid[p][q]==4||grid[p][q]==5||grid[p][q]==6){
+				console.log(grid, cell)
+				displayNumber(cell[p*12+q],grid[p][q]);
+			}
+			else if (grid[p][q]=='b'){
+				var flag=0;
+				var bNo=bombList.length;
+				for (var l=0;l<bNo;l++) {
+					if (bombList[l]==p*12+q)
+						flag=1;
+				}
+				if(flag==0){		
+					explodeAnimate(cell[p*12+q]);
+					bombList.push(p*12+q);
+				}
 
-    	}
-    	console.log(bombList);
+			}
+    	// console.log(bombList);
     }
 }
 
 
 function make2DArray(cols, rows) {
 	// get string 
-  var arr = new Array(cols);
-  for (var i = 0; i < rows; i++) {
-    arr[i] = new Array(rows);
-  }
-  return arr;
+	var arr = new Array(cols);
+	for (var i = 0; i < rows; i++) {
+		arr[i] = new Array(rows);
+	}
+	return arr;
 }
 
 function randBomb(){
