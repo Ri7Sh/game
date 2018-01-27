@@ -14,7 +14,7 @@ CONSTANTS
 
 ================
 ***************/
-var PIECE_WIDTH = 70, PIECE_HEIGHT = 70, ROWS = 4, COLS = 3, RADIUS = 250;
+var PIECE_WIDTH = 50, PIECE_HEIGHT = 50, ROWS = 4, COLS = 3, RADIUS = 175;
 
 
 /***************
@@ -70,7 +70,7 @@ Game.prototype.start = function(){
 	})
 
 	this.grid.cells.forEach((cell, index)=>{
-		console.log(text[index]);
+		// console.log(text[index]);
 		cell.cell.innerText = text[index];
 	})
 }
@@ -93,11 +93,14 @@ Game.prototype.setPieceEventListeners = function(piece){
 }
 
 Game.prototype.snapPiece = function(piece){
+	
+	if(!piece.isDraggable)return;
 	if(this.grid.isInsideTable(piece.rect())){
 		this.grid.snapToGrid(piece);
 	}else{
+		// console.log(piece)
 		piece.setBack();
-		this.grid.hightlightGridBlock(piece.rect());
+		// this.grid.hightlightGridBlock(piece.rect());
 	}
 }
 
@@ -202,6 +205,7 @@ Piece.prototype.setCell = function(cell){
 Piece.prototype.toggleDrag = function(){
 	this.isDraggable = !this.isDraggable;
 	if(this.isDraggable){
+		this.removeCell();
 		this.ele.style.zIndex = 999;
 	}else{
 		this.ele.style.zIndex = 0;
@@ -226,7 +230,7 @@ Piece.prototype.highlight = function(){
 
 Piece.prototype.removeCell = function(){
 	if(this.cell){
-		console.log(this.cell)
+		// console.log(this.cell)
 		this.cell.removePiece();
 	}
 	this.cell = null;
@@ -238,6 +242,7 @@ Piece.prototype.getIndex = function(){
 }
 
 Piece.prototype.setBack = function(){
+	// if(this.cell != null)this.removeCell();
 	var [left, top] = services.getPieceDefaultPosition(this.ele.parentNode, this.getIndex());
 	this.ele.style.top = top + "px";
 	this.ele.style.left = left + "px";
@@ -287,7 +292,7 @@ function Grid(table, cells, config={rows:3, cols:3}){
 Grid.prototype.addPiece = function(piece, cell){
 	this.log(piece, cell, this);
 	if(cell.isFree()){
-		console.log("is Free ->", cell.isFree())
+		// console.log("is Free ->", cell.isFree())
 		piece.setCell(cell);
 		cell.setPiece(piece);
 	}else{
@@ -403,9 +408,10 @@ Cell.prototype.rect = function(){
 }
 
 Cell.prototype.setPiece = function(piece){
-	console.log('setPiece', piece)
+	// console.log('setPiece', piece)
+	// this.cell.style.backgroundColor = "#0ff";
 	this.piece = piece;
-	console.log(this, this.isFree())
+	// console.log(this, this.isFree())
 }
 
 Cell.prototype.getPieceIndex = function(){
@@ -421,6 +427,7 @@ Cell.prototype.isFree = function(){
 
 
 Cell.prototype.removePiece = function(piece){
+	// this.cell.style.backgroundColor = "#00f";
 	this.piece = null;
 }
 
@@ -461,11 +468,10 @@ services.getPieceDefaultPosition = function(eleParent, index){
 	var containerRect = container.getClientRects()[0];
 	var spacing = 10;
 	var padding = 20;
-	var leftOffset = (PIECE_WIDTH + spacing )* index;
-
-	var left = leftOffset % (containerRect.width - padding*2) + padding;
-	var top = padding + Math.floor(leftOffset/(containerRect.width - 2*padding))*(PIECE_HEIGHT + spacing);
-	
+	var capacity = Math.floor((containerRect.width - 2*padding + spacing)/(PIECE_WIDTH + spacing));
+	var left = (index%capacity)*(PIECE_WIDTH + spacing) + padding;
+	var top = Math.floor(index/capacity)*(PIECE_HEIGHT + spacing) + padding;
+	console.log(index, capacity, index%capacity, Math.floor(index/capacity))
 	return services.getAbsolutePosition(eleParent, [left + containerRect.left, top + containerRect.top]);
 }
 
@@ -589,7 +595,7 @@ var grid = new Grid(table, cells, {
 	cols: COLS
 });
 var pieceList = Array.prototype.map.call(pieces , (ele, i) => new Piece(ele, i));
-var game = new Game(grid, pieceList, true);
+var game = new Game(grid, pieceList, false);
 
 
 /***************

@@ -8,8 +8,8 @@ body{
 	height: 100vh;
 }
 .grid .cell, .piece, .highlighted{
-	width: 70px;
-	height: 70px;
+	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 }
 
@@ -25,15 +25,15 @@ table{
 	/*border: 1px solid #ccc;*/
 	/*margin: 35px;*/
 	position: absolute;
-	top: calc(50% - 35px);
-	left: calc(50% - 35px);
+	top: calc(50% - 25px);
+	left: calc(50% - 25px);
 	/*border: 2px solid ;*/
 	/*border-radius: 50%;*/
 	transition: all .5s linear;
-	line-height: 70px;
+	line-height: 50px;
 	text-align:center;
 	text-transform: uppercase;
-	font-size: .7em;
+	font-size: .5em;
 	color: #fff;
 	background: rgba(0, 0, 0, .3);
 }
@@ -43,9 +43,10 @@ table{
 }*/
 #board{
 	position: relative;
-	/*display:flex;
-	align-items: center;*/
+	display:flex;
+	align-items: center;
 	padding: 50px;
+	justify-content: space-around;
 	
 }
 
@@ -55,8 +56,8 @@ table{
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
-	height: 500px;
-	width: 500px;
+	height: 350px;
+	width: 350px;
 	/*border: 1px solid #000;*/
 	position: relative;
 	border-radius: 50%;
@@ -82,14 +83,14 @@ table{
 }
 
 .image_container{
-	flex: 2;
+	/*flex: 2;*/
 	margin-left: 30px;
-	height: 200px;
+	height: 90vh;
 	
 	background: #efefef;
 	border-radius: 6px;
-	margin: 100px 0 0 0;
-	width: 600px;
+	/*margin: 100px 0 0 0;*/
+	width: 100px;
 }
 button{
 	padding: 10px;
@@ -135,9 +136,9 @@ button:active{
 }
 
 .ring_1{
-	transform: scale(.8);
-	/*background: radial-gradient(#777, #000)*/
-	background: #fff;
+	transform: scale(1.3);
+	/*background: radial-gradient(#aaa, #000);*/
+	
 	opacity: .3;
 	background: url('img/eye.png');
 	background-size: 30%;
