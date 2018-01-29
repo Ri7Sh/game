@@ -7,19 +7,19 @@ body{
 	/*background: rgb(0, 38, 64);*/
 	height: 100vh;
 }
-.grid .cell, .piece, .highlighted{
+#puzzle .grid .cell, .piece, .highlighted{
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
 }
 
-table{
+#puzzle table{
 	border-collapse: collapse;
 	border-radius: 10px;
 	border: 2px solid #aaa;
 	
 }
-.grid .cell{
+#puzzle .grid .cell{
 	margin:0;
 	padding:0px;
 	/*border: 1px solid #ccc;*/
@@ -33,15 +33,15 @@ table{
 	line-height: 50px;
 	text-align:center;
 	text-transform: uppercase;
-	font-size: .5em;
+	font-size: .7em;
 	color: #fff;
-	background: rgba(0, 0, 0, .3);
+	background: rgba(0,0,0, .3);
 }
 
 /*table, td{
 	
 }*/
-#board{
+#puzzle #board{
 	position: relative;
 	display:flex;
 	align-items: center;
@@ -50,7 +50,7 @@ table{
 	
 }
 
-.grid{
+#puzzle .grid{
 	/*margin-top: 100px;*/
 	width: fit-content;
 	display: flex;
@@ -61,54 +61,59 @@ table{
 	/*border: 1px solid #000;*/
 	position: relative;
 	border-radius: 50%;
+	z-index: 2;
 	
 }
 
 
 
-.piece{
+#puzzle .piece{
 	position: absolute;
 	transition: all .02s linear;
 	cursor:pointer;
 	background: #fff;
+	z-index: 4;
 }	
 
-.selected{
+#puzzle .selected{
 	border: 2px solid #222222 !important;
 }
 
-.grid .highlighted{
+#puzzle .grid .highlighted{
 	border: 2px solid #777;
 	border-radius: 50%;
 }
 
-.image_container{
+#puzzle .image_container{
 	/*flex: 2;*/
 	margin-left: 30px;
-	height: 200px;
+	height: 300px;
 	
 	/*background: #efefef;*/
 	border-radius: 6px;
 	/*margin: 100px 0 0 0;*/
-	width: 400px;
+	width: 300px;
 }
-button{
+#puzzle button{
 	padding: 10px;
     border-radius: 6px;
-    margin: 30px 10px;
-    background: #3fad3d;
-    box-shadow: 0 5px 0 #317740;
+    /*margin: 30px 10px;*/
+    /*background: #3fad3d;
+    box-shadow: 0 5px 0 #317740;*/
     border: none;
     color: #fff;
+    background: transparent;
+    border: 1px solid #fff;
     transition: all 1s linear;
+    cursor: pointer;
 }
 
-button:active{
+#puzzle button:active{
 	transform: translateY(3px);
 	box-shadow: 0 2px 0 #317740;
 }
 
-.number{
+#puzzle .number{
 	border: 1px solid #aaa;
 	line-height: 70px;
 	text-align:center;
@@ -116,18 +121,18 @@ button:active{
 	color: #fff;
 }
 
-.red{
+#puzzle .red{
 	
 	/*border: 2px inset #f00;*/
 	background: #f00;
 	opacity: .3;
 }
 
-.won{
+#puzzle .won{
 	border: 3px solid #0f0;
 }
 
-.ring{
+#puzzle .ring{
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -135,7 +140,7 @@ button:active{
 	border-radius: 50%;
 }
 
-.ring_1{
+#puzzle .ring_1{
 	transform: scale(1.3);
 	/*background: radial-gradient(#aaa, #000);*/
 	
@@ -147,7 +152,7 @@ button:active{
 	background-position-y: center;
 }
 
-.glow{
+#puzzle .glow{
 	animation: glow 2s linear;
 }
 
@@ -163,25 +168,50 @@ button:active{
 	}
 }
 
-.ring_2{
+#puzzle .ring_2{
 	transform: scale(1.2);
 	background: url('../images/kkk.jpg');
 	background-size: cover;
 	background-position-x: center;
-	border: 5px solid #000;
+	border: 1px solid #fff;
 	z-index: -1;
 	opacity: .9;
+	filter: sepia(.9);
 }
 
-.overlay{
+#puzzle .overlay{
 	background: transparent !important;
 }
 
-.stage{
+#puzzle .stage{
 	/*background: #fff;*/
 }
 
-.title{
+#puzzle .title{
 	background: #131313;
 	padding-bottom: 30px;
+}
+
+#puzzle{
+	position: absolute;
+	width: 100vw;
+	height: 90vh;
+	top:0;
+	
+}
+
+#board{
+	border: 1px solid #fff;
+	position: relative;
+	background: rgba(0,0,0,0.7);
+	height: 600px;
+	width: 1000px;
+	margin-top: calc(50vh - 300px);
+	margin-left: calc(50vw - 500px);
+}
+
+#puzzle nav{
+	position: absolute;
+	top: 30px;
+	right: 30px;
 }

@@ -1,12 +1,3 @@
-/*****
-
-Jigsaw puzzle front-end 
-@Credits: Neethu Mariya Joy
-(roboneet.github.io)
-
-*****/
-
-
 /***************
 ================
 
@@ -16,6 +7,12 @@ CONSTANTS
 ***************/
 var PIECE_WIDTH = 50, PIECE_HEIGHT = 50, ROWS = 4, COLS = 3, RADIUS = 175;
 
+
+(function(){
+
+	window.__Grid__ = Grid;
+	window.__Game__ = Game;
+	window.__Piece__ = Piece;
 
 /***************
 ================
@@ -208,7 +205,7 @@ Piece.prototype.toggleDrag = function(){
 		this.removeCell();
 		this.ele.style.zIndex = 999;
 	}else{
-		this.ele.style.zIndex = 0;
+		this.ele.style.zIndex = 10;
 	}
 	this.highlight();
 	return this.isDraggable;
@@ -479,6 +476,8 @@ services.getPieceDefaultPosition = function(eleParent, index){
 	return services.getAbsolutePosition(eleParent, [left + containerRect.left, top + containerRect.top]);
 }
 
+})(window);
+
 
 /***************
 ================
@@ -490,7 +489,7 @@ create scene
 
 
 
-var state = "nnnnnnnnnnnn";
+var state;
 var text = ["fire", "air", "water","fire", "air", "water","fire", "air", "water","fire", "air", "water"]
 // var pieces = ['./img/pieces/superman/image_part_005.jpg','./img/pieces/superman/image_part_005.jpg', './img/pieces/superman/image_part_009.jpg', './img/pieces/superman/image_part_001.jpg', './img/pieces/superman/image_part_007.jpg', './img/pieces/superman/image_part_002.jpg', './img/pieces/superman/image_part_004.jpg', './img/pieces/superman/image_part_008.jpg', './img/pieces/superman/image_part_003.jpg', './img/pieces/superman/image_part_006.jpg','./img/pieces/superman/image_part_006.jpg' ]
 
@@ -499,7 +498,7 @@ var container  = document.createElement('div');
 container.className = "image_container";
 board.appendChild(container);
 
-var scene = document.createDocumentFragment();
+
 
 var tableEle = document.createElement('div');
 tableEle.className = 'grid';
@@ -528,57 +527,11 @@ for(var i = 1; i <= 2; i++){
 
 board.insertBefore(tableEle, board.firstChild);
 
-
-//For all practical purposes .......
-
-// pieces.forEach((src, index)=>{
-	var peiceNo = 0;
-	state.split("").forEach((el,index)=>{
-		if(el == "h")return;
-
-		var img = document.createElement('img');
-
-		img.className = 'piece';
-		img.src = 'assets/images/pieces/mama/' + (index + 1) + '.png';
-	// img.setAttribute("data-index", index);
-	img.position = "absolute";
-	var pos = services.getPieceDefaultPosition(document.getElementById('board'), peiceNo)
-	// var pos = services.getPieceDefaultPosition(document.body, peiceNo)
-	img.style.top = pos[1] + "px";
-	img.style.left = pos[0] + "px";
-	img.style.width = PIECE_WIDTH + "px";
-	img.style.height = PIECE_HEIGHT +  "px";
-	img.setAttribute("data_pos", el);
-	peiceNo++;
-	scene.appendChild(img);
-})
-
-
-
-
-// new Array((ROWS * COLS)).fill(0).forEach((ele, index)=>{
-// 	var div = document.createElement('div');
-// 	div.className = 'piece number';
-// 	div.innerText = index;
-
-// 	div.style.backgroundColor = "#" + getRandomNumber();
-
-// 	div.setAttribute("data-index", index);
-// 	div.position = "absolute";
-// 	var pos = services.getPieceDefaultPosition(document.getElementById('board'), index)
-// 	div.style.top = pos[1] + "px";
-// 	div.style.left = pos[0] + "px";
-// 	div.style.width = PIECE_WIDTH + "px";
-// 	div.style.height = PIECE_HEIGHT +  "px";
-
-// 	scene.appendChild(div);
-// })
-
 function getRandomNumber(){
 	return ("000"+(Math.random()*999).toString()).slice(-3)
 }
 
-board.appendChild(scene);
+
 
 
 
@@ -591,16 +544,20 @@ my game config
 ================
 ***************/
 
-var table = document.querySelector('.grid');
-var cells = document.querySelector('.grid').querySelectorAll('.cell');
-var pieces = document.querySelectorAll('.piece');
+var table, cells__, pieces, grid, pieceList, game;
 
-var grid = new Grid(table, cells, {
-	rows: ROWS,
-	cols: COLS
-});
-var pieceList = Array.prototype.map.call(pieces , (ele, i) => new Piece(ele, i));
-var game = new Game(grid, pieceList, false);
+function setupConfig(){
+	table = document.querySelector('.grid');
+	cells__ = document.querySelector('.grid').querySelectorAll('.cell');
+	pieces = document.querySelectorAll('.piece');
+
+	grid = new __Grid__(table, cells__, {
+		rows: ROWS,
+		cols: COLS
+	});
+	pieceList = Array.prototype.map.call(pieces , (ele, i) => new __Piece__(ele, i));
+	game = new __Game__(grid, pieceList, false);
+}
 
 
 /***************
@@ -610,10 +567,44 @@ Start ^_^ (yay!)
 
 ================
 ***************/
-game.start();
 
 
-Array.prototype.forEach.call(document.querySelectorAll('button'), function(el){
+function openPuzzle(){
+	console.log($(".piece"))
+	$(".piece").remove();
+	$('.highlighted').removeClass('highlighted');
+	var state = getString();
+	var peiceNo = 0;
+	var scene = document.createDocumentFragment();
+	state.split("").forEach((el,index)=>{
+		if(el == "h")return;
+
+		var img = document.createElement('img');
+
+		img.className = 'piece';
+		img.src = 'assets/images/pieces/mama/' + (index + 1) + '.png';
+		// img.setAttribute("data-index", index);
+		img.position = "absolute";
+		var pos = services.getPieceDefaultPosition(document.getElementById('board'), peiceNo)
+		// var pos = services.getPieceDefaultPosition(document.body, peiceNo)
+		img.style.top = pos[1] + "px";
+		img.style.left = pos[0] + "px";
+		img.style.width = PIECE_WIDTH + "px";
+		img.style.height = PIECE_HEIGHT +  "px";
+		img.setAttribute("data_pos", el);
+		peiceNo++;
+		scene.appendChild(img);
+	})
+	board.appendChild(scene);
+	setupConfig();
+	game.start();
+	$('#puzzle').fadeIn();
+}
+
+
+
+
+[document.querySelector('#submit_puzzle'), document.querySelector('#save_puzzle')].forEach(function(el){
 	el.addEventListener('click', (e)=>{
 		var v = document.querySelector('.ring_1');
 		v.className += " glow";
@@ -622,11 +613,13 @@ Array.prototype.forEach.call(document.querySelectorAll('button'), function(el){
 		}, 2000)
 		var boardSequence = game.getSequence();
 		var string = encodeSequence(boardSequence);
+		console.log(string , ' @ ', "/main/" + e.target.getAttribute("data-url"))
 		// $.post({
 		// 	"data": string
 		// }, '/main/' + e.target.getAttribute("data-url"), function(data){
 		// 	console.log(data)
 		// })
+		setTimeout(closePuzzle, 1500);
 	})
 });
 
@@ -639,7 +632,7 @@ function encodeSequence(seq){
 			str += el.toString(16);
 		}
 	})
-	console.log(str);
+	// console.log(str);
 	return str;
 }
 
@@ -664,3 +657,15 @@ function encodeSequence(seq){
 // 	return result;
 // }
 
+
+function closePuzzle(){
+	$('#puzzle').fadeOut();
+	
+}
+
+
+function getString(){
+	return "nnnnnnnnnnnn";
+}
+
+// openPuzzle();

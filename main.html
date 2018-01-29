@@ -5,6 +5,7 @@
 
 <link href="assets/css/common.css" rel="stylesheet">
 <link href="assets/css/main.css" rel="stylesheet">
+<link href="assets/css/puzzle.css" rel="stylesheet">
 <!-- Jquery -->
 <script src="assets/js/jquery.min.js"></script>
 
@@ -101,14 +102,25 @@
 				
 			</div>
 			<!-- bottom popup -->
-				<div class="snackbar">
-					
-				</div>
+			<div class="snackbar">
+				
+			</div>
+
+			<!--puzzzle popup-->
+			<section id="puzzle">
+				<section  id="board" >
+					<nav>
+						<button id="submit_puzzle" data-url="submit/">SUBMIT</button>
+						<button id="save_puzzle" data-url="save/">SAVE AND CLOSE</button>
+					</nav>
+				</section>
+			</section>
 		</div>
 
 	</div>
 	<script src="assets/js/templates.js"></script>
 	<script src="assets/js/main.js"></script>
+	<script src="assets/js/puzzle.js"></script>
 	<script>
 		// var str = "{{ field }}";
 		var str='0bbbbb6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';

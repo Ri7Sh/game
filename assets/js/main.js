@@ -1,3 +1,7 @@
+$('.tadaa').fadeOut();
+$('.snackbar').fadeOut();
+$('#puzzle').fadeOut();
+
 // Move GIF with mouse
 var lFollowX = 0;
 var lFollowY = 0;
@@ -117,6 +121,7 @@ $(function __intit__(){
 				})
 				// displayMinesweeper(grid,cells)
 			});
+			// console.log(cells)
 			cells.push(cell);
 
 		}
@@ -152,7 +157,7 @@ function displayMinesweeper(grid,cell){
 	for(p=0;p<12;p++)
 		for(q=0;q<12;q++) {
 			if(grid[p][q]==1||grid[p][q]==2||grid[p][q]==3||grid[p][q]==4||grid[p][q]==5||grid[p][q]==6){
-				console.log(grid, cell)
+				// console.log(grid, cell)
 				displayNumber(cell[p*12+q],grid[p][q]);
 			}
 			else if (grid[p][q]=='b'){
@@ -260,8 +265,7 @@ function textAnimation(ele, text){
 
 
 
-$('.tadaa').fadeOut();
-$('.snackbar').fadeOut();
+
 
 function openQuestionDiv(text){
 	$('.tadaa').fadeIn();
@@ -303,9 +307,9 @@ function hideQuestionDiv(){
 	setAnimation();
 }
 
-setTimeout(()=>{
-	openQuestionDiv("eee");
-}, 300)
+// setTimeout(()=>{
+// 	openQuestionDiv("eee");
+// }, 300)
 
 $('#submit_answer').click(function(e){
 	var ans = $("#answer").val();
@@ -318,9 +322,14 @@ $('#submit_answer').click(function(e){
 })
 
 function submitSuccess(data){
-
+	openSnackBar("submissionSuccess");
+	setTimout(closeSnackBar, 3000);
 }
 
+function submitFaliure(data){
+	openSnackBar("submissionFaliure");
+	setTimout(closeSnackBar, 3000);
+}
 
 function openSnackBar(templateName){
 	$('.snackbar').html(templates[templateName].html);
