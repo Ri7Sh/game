@@ -1,8 +1,9 @@
 .stage{
-	background-image: url("Capture.JPG");
+	background-image: url("../images/capture.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+	
 }
 
 .stage, .bomb{
@@ -27,12 +28,13 @@
 	
 	background: #3f824e2b;
 	/*filter: blur(1px);*/
-	cursor: url('target.ico'), pointer;
+	cursor: url('../images/target.ico'), pointer;
 	
 }
 .minesweeper_cell{
 	border: 1px solid #000;	
 	transition: all .3s linear;
+	/*background-color: rgba(0,120, 0,0.3);*/
 }
 .minesweeper_cell:hover{
 	filter: brightness(1.7);	

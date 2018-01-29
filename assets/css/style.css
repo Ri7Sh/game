@@ -87,7 +87,7 @@ table{
 	margin-left: 30px;
 	height: 200px;
 	
-	background: #efefef;
+	/*background: #efefef;*/
 	border-radius: 6px;
 	/*margin: 100px 0 0 0;*/
 	width: 400px;
@@ -140,7 +140,7 @@ button:active{
 	/*background: radial-gradient(#aaa, #000);*/
 	
 	opacity: .3;
-	background: url('img/eye.png');
+	background: url('../images/eye.png');
 	background-size: 30%;
 	background-repeat: no-repeat;
 	background-position-x: center;
@@ -165,7 +165,7 @@ button:active{
 
 .ring_2{
 	transform: scale(1.2);
-	background: url('img/kkk.jpg');
+	background: url('../images/kkk.jpg');
 	background-size: cover;
 	background-position-x: center;
 	border: 5px solid #000;

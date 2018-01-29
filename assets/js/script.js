@@ -539,7 +539,7 @@ board.insertBefore(tableEle, board.firstChild);
 		var img = document.createElement('img');
 
 		img.className = 'piece';
-		img.src = './img/pieces/mama/' + (index + 1) + '.png';
+		img.src = 'assets/images/pieces/mama/' + (index + 1) + '.png';
 	// img.setAttribute("data-index", index);
 	img.position = "absolute";
 	var pos = services.getPieceDefaultPosition(document.getElementById('board'), peiceNo)

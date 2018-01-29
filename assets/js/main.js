@@ -254,7 +254,7 @@ function textAnimation(ele, text){
 	if(!animation_skip)
 		setTimeout(()=>{
 			textAnimation(ele, text.slice(1));
-		},100)
+		},50)
 }
 
 
