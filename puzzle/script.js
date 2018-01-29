@@ -460,7 +460,11 @@ services = {};
 services.getAbsolutePosition = function(eleParent, pageOffsets){	
 	var [pageLeft, pageTop] = pageOffsets;
 	// console.log(pageOffsets)
-	return [pageLeft - eleParent.offsetLeft + window.scrollX, pageTop - eleParent.offsetTop + window.scrollY]
+	// console.log(pageOffsets, window.scrollX, window.scrollY)
+	var parentRect = eleParent.getBoundingClientRect();
+	
+	return [pageLeft - parentRect.x + window.scrollX, pageTop - parentRect.y + window.scrollY]
+	// return pageOffsets;
 }
 
 services.getPieceDefaultPosition = function(eleParent, index){
@@ -539,6 +543,7 @@ board.insertBefore(tableEle, board.firstChild);
 	// img.setAttribute("data-index", index);
 	img.position = "absolute";
 	var pos = services.getPieceDefaultPosition(document.getElementById('board'), peiceNo)
+	// var pos = services.getPieceDefaultPosition(document.body, peiceNo)
 	img.style.top = pos[1] + "px";
 	img.style.left = pos[0] + "px";
 	img.style.width = PIECE_WIDTH + "px";

@@ -27,8 +27,7 @@ function moveBackground() {
 
 // $(window).on('mousemove click', trackMouse);
 
-window.addEventListener('mousemove', trackMouse, false);
-window.addEventListener('click', trackMouse, false);
+
 
 function trackMouse(e){
 	
@@ -41,11 +40,8 @@ function trackMouse(e){
 moveBackground();
 
 // Random number generator
-setInterval(function(){
-	ChangeNumber1(); 
-	ChangeNumber2(); 
-	ChangeNumber3(); 
-}, 50);
+var numberAnimation1;
+var numberAnimation2;
 function ChangeNumber1() {
 	var newNumber = Math.floor(Math.random(9) * 1000000);
 	$('#randomnumber1').text(newNumber);
@@ -59,12 +55,32 @@ function ChangeNumber3() {
 	$('#randomnumber3').text(newNumber);
 }
 
-setInterval(function(){
-	ChangeNumber4(); 
-}, 1500);
+
 function ChangeNumber4() {
 	var newNumber = Math.floor(Math.random(9) * 100000);
 	$('#randomscan').text(newNumber);
+}
+
+function setAnimation(){
+	numberAnimation1 = setInterval(function(){
+		ChangeNumber1(); 
+		ChangeNumber2(); 
+		ChangeNumber3(); 
+	}, 50);
+
+	numberAnimation2 = setInterval(function(){
+		ChangeNumber4(); 
+	}, 1500);
+
+	window.addEventListener('mousemove', trackMouse, false);
+	window.addEventListener('click', trackMouse, false);
+}
+
+function clearAnimation(){
+	clearInterval(numberAnimation1);
+	clearInterval(numberAnimation2);
+	window.removeEventListener('mousemove', trackMouse, false);
+	window.removeEventListener('click', trackMouse, false);
 }
 
 // Load in dimensions
@@ -225,44 +241,93 @@ function displayNumber(ele, number){
 	ele.appendChild(p);
 }
 
+var animation_skip= false;
+
 function textAnimation(ele, text){
 	if(text == "")return;
-	var char = text.slice(0, 1);
-	console.log(char);
+	var char = text;
+	if(!animation_skip)
+		char = text.slice(0, 1);
+	// console.log(char);
 	var child = document.createTextNode(char);
 	ele.appendChild(child);
-	setTimeout(()=>{
-		textAnimation(ele, text.slice(1));
-	},100)
+	if(!animation_skip)
+		setTimeout(()=>{
+			textAnimation(ele, text.slice(1));
+		},100)
 }
 
 
 
 
 $('.tadaa').fadeOut();
+$('.snackbar').fadeOut();
 
 function openQuestionDiv(text){
 	$('.tadaa').fadeIn();
 	$('.overlay').css({
 		'pointer-events': 'initial'
 	})
+	animation_skip = false;
 	textAnimation(document.querySelector(".the_text"),"abcdasdfghjkqwae srdtfvgybhjnkawzsxdcfgvhbjn fgchvjbsa ghvasjdh asvdhjasjhdjas hadsjhbja avshd?")
 
-	window.removeEventListener('mousemove', trackMouse, false);
-	window.removeEventListener('click', trackMouse, false);
+	clearAnimation();
 }
 
 $('.tadaa .cross').on('click', (e)=>{
-	hideQuestionDiv();
+	animation_skip = true;
+	confirmAction(hideQuestionDiv);
 })
+
+function confirmAction(callback){
+	// $('.confirmation_box').fadeIn();
+	openSnackBar("confirmAction");
+
+	$('.confirm span').on('click', (e)=>{
+		closeSnackBar();
+		var ele = e.target;
+		if(ele.getAttribute("data-confirm") == "y"){
+
+			if(callback)callback();
+		}
+	})
+}
+
+
 
 function hideQuestionDiv(){
 	$('.tadaa').fadeOut();
 	$('.overlay').css({
 		'pointer-events': 'none'
 	})
-	window.addEventListener('mousemove', trackMouse, false);
-	window.addEventListener('click', trackMouse, false);
+	setAnimation();
 }
 
-setTimeout(()=>{openQuestionDiv("eee");}, 3000);
+setTimeout(()=>{
+	openQuestionDiv("eee");
+}, 300)
+
+$('#submit_answer').click(function(e){
+	var ans = $("#answer").val();
+	$.ajax({
+		"method": "GET",
+		"data" : JSON.stringify({answer: ans}),
+		"url": '/main/',
+		success: submitSuccess
+	})
+})
+
+function submitSuccess(data){
+
+}
+
+
+function openSnackBar(templateName){
+	$('.snackbar').html(templates[templateName].html);
+	$('.snackbar').addClass(templates[templateName].class)
+	$('.snackbar').fadeIn();
+}
+
+function closeSnackBar(){
+	$('.snackbar').fadeOut();	
+}

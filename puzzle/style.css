@@ -4,7 +4,7 @@
 }
 
 body{
-	
+	/*background: rgb(0, 38, 64);*/
 	height: 100vh;
 }
 .grid .cell, .piece, .highlighted{
@@ -85,12 +85,12 @@ table{
 .image_container{
 	/*flex: 2;*/
 	margin-left: 30px;
-	height: 90vh;
+	height: 200px;
 	
 	background: #efefef;
 	border-radius: 6px;
 	/*margin: 100px 0 0 0;*/
-	width: 100px;
+	width: 400px;
 }
 button{
 	padding: 10px;
@@ -171,4 +171,17 @@ button:active{
 	border: 5px solid #000;
 	z-index: -1;
 	opacity: .9;
+}
+
+.overlay{
+	background: transparent !important;
+}
+
+.stage{
+	/*background: #fff;*/
+}
+
+.title{
+	background: #131313;
+	padding-bottom: 30px;
 }

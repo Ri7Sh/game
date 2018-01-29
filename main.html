@@ -1,9 +1,11 @@
 <html>
 <head>
 	
-	<title>Vision</title>
-<!-- Jquery -->
+	<title>Checkmate'18</title>
+
+<link href="common.css" rel="stylesheet">
 <link href="main.css" rel="stylesheet">
+<!-- Jquery -->
 <script src="./jquery.min.js"></script>
 
 
@@ -59,13 +61,15 @@
 					<p>ENGAGE<span class="letter6">_</span></p>
 
 				</div>
+				<!-- center popup -->
 				<div class="tadaa">
 					<nav class="tad_nav">
 						<!-- <li>&#x003C;&#x003E;</li> -->
 						<li class="plus">+</li>
 						<li class="cross">x</li>
 					</nav>
-					<p><span class="the_text"></span><b class="blinking_cursor">_</b></p>
+					
+					<p class="main_text"><span class="the_text"></span><b class="blinking_cursor">_</b></p>
 					<input type="text" id="answer" autofocus="true" placeholder="Your answer">
 					<button id="submit_answer">Submit</button>
 				</div>
@@ -94,12 +98,16 @@
 					<p class="dimension5">FIT PROBABILITY 93%</p>
 
 				</div>
-
+				
 			</div>
-
+			<!-- bottom popup -->
+				<div class="snackbar">
+					
+				</div>
 		</div>
 
 	</div>
+	<script src="./templates.js"></script>
 	<script src="./main.js"></script>
 	<script>
 		// var str = "{{ field }}";
