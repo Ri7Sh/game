@@ -2,6 +2,7 @@ $('.tadaa').fadeOut();
 $('.snackbar').fadeOut();
 $('#puzzle').fadeOut();
 
+setAnimation();
 // Move GIF with mouse
 var lFollowX = 0;
 var lFollowY = 0;
